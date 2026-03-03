@@ -7,6 +7,7 @@
   "scripts": {
     "analyze": "ts-node src/cli.ts",
     "annotator": "ts-node src/annotator/server.ts",
+    "start:annotator": "node dist/annotator/server.js",
     "build": "tsc -p .",
     "lint": "echo \"no lint configured\"",
     "test": "node ./scripts/run-tests.js || echo \"tests not configured\""
