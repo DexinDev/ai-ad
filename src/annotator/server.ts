@@ -4,8 +4,11 @@ import path from "path";
 import url from "url";
 import { ensurePngPreview } from "../tools/render";
 
-const SAMPLES_DIR = path.join(process.cwd(), "samples");
-const DATA_DIR = path.join(process.cwd(), "data");
+// Опираемся на расположение скомпилированного server.js (dist/annotator),
+// чтобы корректно находить корень проекта и папку samples вне зависимости от cwd.
+const PROJECT_ROOT = path.join(__dirname, "..", "..");
+const SAMPLES_DIR = path.join(PROJECT_ROOT, "samples");
+const DATA_DIR = path.join(PROJECT_ROOT, "data");
 const ANNOTATIONS_DIR = path.join(DATA_DIR, "annotations");
 const PREVIEWS_DIR = path.join(DATA_DIR, "annotator_previews");
 
