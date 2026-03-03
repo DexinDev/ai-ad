@@ -7,7 +7,7 @@ module.exports = {
       // (обычно /home/forge/your-site.com/current), поэтому cwd можно не задавать.
       env: {
         NODE_ENV: "production",
-        ANNOTATOR_PORT: 3000,
+        ANNOTATOR_PORT: 3001,
       },
     },
   ],
