@@ -191,7 +191,7 @@ const server = http.createServer(async (req, res) => {
   sendText(res, 404, "Not found");
 });
 
-const port = Number(process.env.ANNOTATOR_PORT ?? 3000);
+const port = Number(process.env.ANNOTATOR_PORT ?? 3030);
 // eslint-disable-next-line no-console
 console.log(
   `Annotator UI running at http://localhost:${port}/ (samples from ${SAMPLES_DIR})`,
