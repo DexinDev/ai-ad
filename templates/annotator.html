@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Разметка OOH-креативов</title>
+    <style>
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        margin: 0;
+        padding: 24px 32px;
+        background: #f3f4f6;
+        color: #111827;
+      }
+      h1 {
+        margin-top: 0;
+      }
+      .layout {
+        max-width: 960px;
+        margin: 0 auto;
+        background: #ffffff;
+        padding: 24px 28px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+      }
+      .meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+        gap: 12px;
+      }
+      .annotator {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .annotator input {
+        padding: 4px 8px;
+        border-radius: 6px;
+        border: 1px solid #d1d5db;
+      }
+      .image-frame {
+        border-radius: 12px;
+        border: 1px dashed #d1d5db;
+        background: #f9fafb;
+        min-height: 260px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+        overflow: hidden;
+      }
+      .image-frame img {
+        max-width: 100%;
+        max-height: 360px;
+        display: none;
+      }
+      .controls {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+      button {
+        padding: 8px 16px;
+        border-radius: 999px;
+        border: none;
+        background: #111827;
+        color: #ffffff;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      button[disabled] {
+        opacity: 0.5;
+        cursor: default;
+      }
+      .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px 24px;
+        margin-top: 12px;
+      }
+      .metric-field {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .metric-label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 14px;
+      }
+      .help {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 16px;
+        height: 16px;
+        border-radius: 999px;
+        background: #e5e7eb;
+        color: #4b5563;
+        font-size: 11px;
+        cursor: help;
+      }
+      .metric-field input {
+        width: 100%;
+        padding: 6px 8px;
+        border-radius: 8px;
+        border: 1px solid #d1d5db;
+        font-size: 14px;
+      }
+      .footer {
+        margin-top: 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 12px;
+        color: #6b7280;
+      }
+      .status {
+        margin-top: 8px;
+        font-size: 13px;
+        color: #4b5563;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="layout">
+      <h1>Разметка OOH-креативов</h1>
+      <div class="meta">
+        <div id="creativeCounter">Креатив 0 из 0</div>
+        <div class="annotator">
+          <span>Аннотатор:</span>
+          <input
+            id="annotatorId"
+            type="text"
+            placeholder="Имя или ID (опционально)"
+          />
+        </div>
+      </div>
+
+      <div class="image-frame">
+        <img id="creativeImage" alt="Превью креатива" />
+        <span id="imagePlaceholder">Нажмите «Показать», чтобы увидеть креатив.</span>
+      </div>
+
+      <div class="controls">
+        <button id="showButton">Показать</button>
+        <button id="nextButton">Дальше</button>
+      </div>
+      <div class="status" id="statusText"></div>
+
+      <form id="metricsForm">
+        <div class="metrics-grid">
+          <div class="metric-field">
+            <label class="metric-label">
+              Читаемость
+              <span
+                class="help"
+                title="Насколько легко за 2–3 секунды прочитать и понять основное сообщение."
+                >?</span
+              >
+            </label>
+            <input
+              type="number"
+              name="readability"
+              min="0"
+              max="100"
+              step="1"
+              required
+            />
+          </div>
+
+          <div class="metric-field">
+            <label class="metric-label">
+              Контраст и цвет
+              <span
+                class="help"
+                title="Насколько хорошо ключевые элементы читаются за счёт контраста и цветового решения."
+                >?</span
+              >
+            </label>
+            <input
+              type="number"
+              name="contrast_color"
+              min="0"
+              max="100"
+              step="1"
+              required
+            />
+          </div>
+
+          <div class="metric-field">
+            <label class="metric-label">
+              Загруженность
+              <span
+                class="help"
+                title="Сколько визуального шума и лишних деталей. Высокий балл — чистый, не перегруженный макет."
+                >?</span
+              >
+            </label>
+            <input
+              type="number"
+              name="clutter"
+              min="0"
+              max="100"
+              step="1"
+              required
+            />
+          </div>
+
+          <div class="metric-field">
+            <label class="metric-label">
+              Визуальная иерархия
+              <span
+                class="help"
+                title="Насколько понятно, что смотреть сначала, что потом; есть ли чёткий главный элемент."
+                >?</span
+              >
+            </label>
+            <input
+              type="number"
+              name="visual_hierarchy"
+              min="0"
+              max="100"
+              step="1"
+              required
+            />
+          </div>
+
+          <div class="metric-field">
+            <label class="metric-label">
+              CTA / QR
+              <span
+                class="help"
+                title="Насколько заметен и понятен призыв к действию или QR-код как точка входа."
+                >?</span
+              >
+            </label>
+            <input
+              type="number"
+              name="cta_qr"
+              min="0"
+              max="100"
+              step="1"
+              required
+            />
+          </div>
+
+          <div class="metric-field">
+            <label class="metric-label">
+              Бренд
+              <span
+                class="help"
+                title="Насколько ясно, чей это бренд и насколько он визуально присутствует на макете."
+                >?</span
+              >
+            </label>
+            <input
+              type="number"
+              name="brand"
+              min="0"
+              max="100"
+              step="1"
+              required
+            />
+          </div>
+
+          <div class="metric-field">
+            <label class="metric-label">
+              Соответствие времени контакта
+              <span
+                class="help"
+                title="Успеет ли человек за 2–3 секунды «снять» с макета всё важное без перегрузки."
+                >?</span
+              >
+            </label>
+            <input
+              type="number"
+              name="contact_time_fit"
+              min="0"
+              max="100"
+              step="1"
+              required
+            />
+          </div>
+
+          <div class="metric-field">
+            <label class="metric-label">
+              Юридическая корректность
+              <span
+                class="help"
+                title="Насколько объявление выглядит юридически безопасным (нет явных нарушений/отсутствующих дисклеймеров)."
+                >?</span
+              >
+            </label>
+            <input
+              type="number"
+              name="legal_compliance"
+              min="0"
+              max="100"
+              step="1"
+              required
+            />
+          </div>
+        </div>
+      </form>
+
+      <div class="footer">
+        <span id="progressText"></span>
+        <span>Протокол: 1 сек + 3 сек просмотра, без вчитывания.</span>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const showButton = document.getElementById("showButton");
+        const nextButton = document.getElementById("nextButton");
+        const img = document.getElementById("creativeImage");
+        const placeholder = document.getElementById("imagePlaceholder");
+        const counter = document.getElementById("creativeCounter");
+        const statusText = document.getElementById("statusText");
+        const progressText = document.getElementById("progressText");
+        const form = document.getElementById("metricsForm");
+        const annotatorInput = document.getElementById("annotatorId");
+
+        let total = 0;
+        let current = 0;
+
+        function updateCounter() {
+          if (total === 0) {
+            counter.textContent = "Креативов не найдено в папке samples/";
+            progressText.textContent = "";
+          } else {
+            counter.textContent = `Креатив ${current + 1} из ${total}`;
+            progressText.textContent = `Осталось: ${total - current} креатив(ов)`;
+          }
+        }
+
+        async function loadMeta() {
+          const res = await fetch("/api/creatives");
+          const data = await res.json();
+          total = data.total || 0;
+          current = 0;
+          updateCounter();
+          if (total === 0) {
+            showButton.disabled = true;
+            nextButton.disabled = true;
+          }
+        }
+
+        function resetForm() {
+          form.reset();
+          statusText.textContent = "";
+        }
+
+        async function runShowSequence() {
+          if (total === 0) return;
+          showButton.disabled = true;
+          nextButton.disabled = true;
+          statusText.textContent =
+            "Показ: 1 секунда, затем 3 секунды, затем ещё 3 секунды.";
+
+          const src = `/api/creative/${current}/image?ts=${Date.now()}`;
+          img.src = src;
+
+          placeholder.style.display = "none";
+          img.style.display = "block";
+
+          setTimeout(() => {
+            img.style.display = "none";
+            setTimeout(() => {
+              img.style.display = "block";
+              setTimeout(() => {
+                img.style.display = "none";
+                placeholder.style.display = "block";
+                statusText.textContent =
+                  "Теперь оцените креатив по метрикам и нажмите «Дальше».";
+                nextButton.disabled = false;
+                showButton.disabled = false;
+              }, 3000);
+            }, 3000);
+          }, 1000);
+        }
+
+        async function submitAndNext() {
+          if (total === 0) return;
+          const formData = new FormData(form);
+          const metrics = {};
+          for (const [key, value] of formData.entries()) {
+            const num = Number(value);
+            if (!Number.isFinite(num) || num < 0 || num > 100) {
+              alert("Все метрики должны быть числами от 0 до 100.");
+              return;
+            }
+            metrics[key] = num;
+          }
+
+          const annotatorId = annotatorInput.value || null;
+
+          const res = await fetch(`/api/creative/${current}/labels`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ annotatorId, metrics }),
+          });
+          if (!res.ok) {
+            alert("Не удалось сохранить ответ.");
+            return;
+          }
+
+          current += 1;
+          if (current >= total) {
+            current = total;
+            updateCounter();
+            statusText.textContent =
+              "Креативы закончились. Можно закрывать окно или обновить страницу для новой сессии.";
+            showButton.disabled = true;
+            nextButton.disabled = true;
+            img.style.display = "none";
+            placeholder.style.display = "block";
+            return;
+          }
+
+          resetForm();
+          updateCounter();
+          statusText.textContent =
+            "Перейдите к следующему креативу. Нажмите «Показать», чтобы начать протокол просмотра.";
+        }
+
+        showButton.addEventListener("click", runShowSequence);
+        nextButton.addEventListener("click", submitAndNext);
+        nextButton.disabled = true;
+
+        loadMeta();
+      })();
+    </script>
+  </body>
+</html>
+

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Отчёт анализа OOH-креатива</title>
+    {{REPORT_CSS}}
+  </head>
+  <body>
+    <header class="header">
+      <div>
+        <h1>{{TITLE}}</h1>
+        <p class="subtitle">
+          Файл: <strong>{{FILE_NAME}}</strong> · Ориентация:
+          <strong>{{ORIENTATION}}</strong> · Размер:
+          <strong>{{DIMENSIONS}}</strong>
+        </p>
+      </div>
+      <div class="overall-score">
+        <div class="score-value">{{OVERALL_SCORE}}</div>
+        <div class="score-label">{{STATUS_LABEL}}</div>
+        <div class="score-meta">Статус: {{STATUS_RAW}}</div>
+      </div>
+    </header>
+
+    <section class="content">
+      <div class="preview-column">
+        <h2>Превью креатива</h2>
+        <div class="preview-frame">
+          <img src="{{PREVIEW_DATA_URL}}" alt="Превью макета" />
+        </div>
+      </div>
+
+      <div class="metrics-column">
+        <h2>Метрики</h2>
+        <table class="subscores-table">
+          <thead>
+            <tr>
+              <th>Метрика</th>
+              <th>Балл (0–100)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{SUBSCORE_ROWS}}
+          </tbody>
+        </table>
+
+        <h2>Рекомендации</h2>
+        <ol class="recommendations">
+          {{RECOMMENDATIONS_LIST}}
+        </ol>
+      </div>
+    </section>
+
+    <section class="assumptions">
+      <h2>Допущения</h2>
+      <ul>
+        {{ASSUMPTIONS_LIST}}
+      </ul>
+      <p class="assumptions-note">
+        В этой версии используются простые показатели изображения (контраст,
+        плотность контуров, цветовое разнообразие) как прокси читаемости и
+        загруженности. Часть расширенных проверок пока не реализована и указана
+        в блоке допущений в JSON.
+      </p>
+    </section>
+
+    <footer class="footer">
+      <div>
+        Версия: {{APP_VERSION}} · Схема: {{SCHEMA_ID}}
+      </div>
+      <div>
+        Библиотеки: {{LIB_VERSIONS}}
+      </div>
+    </footer>
+  </body>
+</html>
