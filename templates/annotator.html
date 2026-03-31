@@ -328,6 +328,8 @@
 
         let total = 0;
         let current = 0;
+        let currentImageSrc = "";
+        let isImageLoaded = false;
 
         function updateCounter() {
           if (total === 0) {
@@ -348,7 +350,10 @@
           if (total === 0) {
             showButton.disabled = true;
             nextButton.disabled = true;
+            statusText.textContent = "В samples/ не найдено поддерживаемых файлов.";
+            return;
           }
+          await preloadCurrentCreative();
         }
 
         function resetForm() {
@@ -356,15 +361,40 @@
           statusText.textContent = "";
         }
 
+        async function preloadCurrentCreative() {
+          if (total === 0 || current >= total) return;
+          showButton.disabled = true;
+          nextButton.disabled = true;
+          isImageLoaded = false;
+          currentImageSrc = `/api/creative/${current}/image?ts=${Date.now()}`;
+          statusText.textContent = "Загружаем креатив...";
+
+          await new Promise((resolve) => {
+            img.onload = () => {
+              isImageLoaded = true;
+              showButton.disabled = false;
+              statusText.textContent =
+                "Креатив загружен. Нажмите «Показать», чтобы начать просмотр.";
+              resolve();
+            };
+            img.onerror = () => {
+              isImageLoaded = false;
+              showButton.disabled = true;
+              statusText.textContent =
+                "Не удалось загрузить креатив. Попробуйте обновить страницу.";
+              resolve();
+            };
+            img.src = currentImageSrc;
+          });
+        }
+
         async function runShowSequence() {
           if (total === 0) return;
+          if (!isImageLoaded) return;
           showButton.disabled = true;
           nextButton.disabled = true;
           statusText.textContent =
             "Показ: 1 секунда, затем 3 секунды, затем ещё 3 секунды.";
-
-          const src = `/api/creative/${current}/image?ts=${Date.now()}`;
-          img.src = src;
 
           placeholder.style.display = "none";
           img.style.display = "block";
@@ -379,7 +409,7 @@
                 statusText.textContent =
                   "Теперь оцените креатив по метрикам и нажмите «Дальше».";
                 nextButton.disabled = false;
-                showButton.disabled = false;
+                showButton.disabled = true;
               }, 3000);
             }, 3000);
           }, 1000);
@@ -425,8 +455,7 @@
 
           resetForm();
           updateCounter();
-          statusText.textContent =
-            "Перейдите к следующему креативу. Нажмите «Показать», чтобы начать протокол просмотра.";
+          await preloadCurrentCreative();
         }
 
         showButton.addEventListener("click", runShowSequence);
