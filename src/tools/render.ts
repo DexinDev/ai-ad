@@ -101,22 +101,13 @@ export async function ensurePngPreview(
     throw new Error("Unable to read image dimensions.");
   }
 
-  const scale =
-    metadata.width > MAX_PREVIEW_WIDTH
-      ? MAX_PREVIEW_WIDTH / metadata.width
-      : 1.0;
-
   const pipeline = image
+    .rotate()
     .toColorspace("srgb")
     .resize({
-      width:
-        scale < 1
-          ? Math.round(metadata.width * scale)
-          : metadata.width,
-      height:
-        scale < 1
-          ? Math.round(metadata.height! * scale)
-          : metadata.height,
+      width: MAX_PREVIEW_WIDTH,
+      fit: "inside",
+      withoutEnlargement: true,
     })
     .png({ compressionLevel: 6 });
 
